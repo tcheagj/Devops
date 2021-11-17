@@ -144,6 +144,4 @@ public class Employe implements Serializable {
 		this.timesheets = timesheets;
 	}
 	
-	
-	
 }
