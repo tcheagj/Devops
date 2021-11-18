@@ -12,9 +12,10 @@ pipeline {
 			
 			stage('Clean Package Test'){
 					steps{
-						script{ sh "cd TimesheetProject"}
-						bat "mvn clean package"
-						bat "mvn test"
+						script{ 
+							cd TimesheetProject
+							mvn package
+						}
 					}				
 				}
 			stage('Test'){
