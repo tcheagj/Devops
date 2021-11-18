@@ -13,8 +13,8 @@ pipeline {
 			stage('Clean Package Test'){
 					steps{
 						script{ 
-							cd TimesheetProject
-							mvn package
+							cd TimesheetProject;
+							mvn package;
 						}
 					}				
 				}
