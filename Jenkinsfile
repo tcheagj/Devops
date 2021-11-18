@@ -12,25 +12,29 @@ pipeline {
 			
 			stage('Clean Package Test'){
 					steps{
+						bat "cd TimesheetProject"
 						bat "mvn clean package"
 						bat "mvn test"
 					}				
 				}
 			stage('Test'){
 					steps{
+						bat "cd TimesheetProject"
 						bat "mvn test"
 					}				
 				}
 				
 			stage('Sonar Analyse'){
 				steps{
+					bat "cd TimesheetProject"
                     bat "mvn sonar:sonar"
                   }
             }
 
         stage('Nexus'){
             steps {
-                 bat "mvn clean install package -Dmaven.test.failure.ignore=true deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=0.3 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/timesheet-0.3.jar"
+            	bat "cd TimesheetProject"
+                bat "mvn clean install package -Dmaven.test.failure.ignore=true deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=0.3 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/timesheet-0.3.jar"
             }
         }
 
