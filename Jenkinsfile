@@ -1,36 +1,54 @@
-// Declarative //
 pipeline {
-    agent any
-
-    stages {
-    	stage('Checkout: Code') {
-            steps {
-                echo 'Pulling...'
-                git branch: 'master',
-                url : 'https://github.com/tcheagj/Devops',
-                credentialsId : 'e17e192c-1a52-4229-bfd5-5c9f367ca028';
-            }
-        }
-        stage('Package creation') {
-            steps {
-                echo 'Building..'
-                bat """mvn -version """
-            }
-        }
-        stage('Build') {
-            steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+	agent any 
+	
+	environment { 
+        registry = "dockertcheagj/devops" 
+        registryCredential = 'dockerHub'
+        dockerImage = '' 
     }
-}
+
+
+	stages{
+			
+			stage('Clean Package Test'){
+					steps{
+						bat "mvn clean package"
+						bat "mvn test"
+					}				
+				}
+			stage('Test'){
+					steps{
+						bat "mvn test"
+					}				
+				}
+				
+			stage('Sonar Analyse'){
+				steps{
+                    bat "mvn sonar:sonar"
+                  }
+            }
+
+        stage('Nexus'){
+            steps {
+                 bat "mvn clean install package -Dmaven.test.failure.ignore=true deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=0.3 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/timesheet-0.3.jar"
+            }
+        }
+
+			stage('Building Image'){
+				steps{
+					script{
+						dockerImage = docker.build registry + ":$BUILD_NUMBER"
+					}
+				}				
+			}
+
+			stage('Deploy Image'){
+				steps{
+					script{
+						docker.withRegistry( '', registryCredential ) 
+                        {dockerImage.push()}
+					}
+				}
+			}
+		}
+	} 
