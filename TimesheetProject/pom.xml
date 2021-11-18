@@ -21,6 +21,8 @@
 		<sonar.projectKey>timesheet</sonar.projectKey>
 	</properties>
 
+	<!-- -->
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
