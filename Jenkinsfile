@@ -12,7 +12,7 @@ pipeline {
 			
 			stage('Clean Package Test'){
 					steps{
-						script{ cd TimesheetProject}
+						script{ sh "cd TimesheetProject"}
 						bat "mvn clean package"
 						bat "mvn test"
 					}				
@@ -33,8 +33,11 @@ pipeline {
 
         stage('Nexus'){
             steps {
-            	script{ cd TimesheetProject}
+            	
                 bat "mvn clean install package -Dmaven.test.failure.ignore=true deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=timesheet -Dversion=0.3 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/timesheet-0.3.jar"
+            	script{ 
+            		cd TimesheetProject
+            	}
             }
         }
 
