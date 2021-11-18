@@ -12,7 +12,6 @@ pipeline {
 			
 			stage('Clean Package'){
 					steps{
-						sh 'echo "Executing clean and package"'
 						sh 'cd TimesheetProject'
 						sh 'mvn clean package'
 					}				
