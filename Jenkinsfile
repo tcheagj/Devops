@@ -10,12 +10,11 @@ pipeline {
 
 	stages{
 			
-			stage('Clean Package Test'){
+			stage('Clean Package'){
 					steps{
-						script{ 
-							cd TimesheetProject;
-							mvn package;
-						}
+						sh 'echo "Executing clean and package"'
+						sh 'cd TimesheetProject'
+						sh 'mvn clean package'
 					}				
 				}
 			stage('Test'){
